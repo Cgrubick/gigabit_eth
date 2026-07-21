@@ -1,0 +1,2 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "E:/Projects/FPGAs/zynq_z015/bringup/bringup.srcs/sources_1/new/gigabit_rx.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'gigabit_rx'

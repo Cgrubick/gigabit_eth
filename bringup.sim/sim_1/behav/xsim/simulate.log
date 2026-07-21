@@ -1,0 +1,17 @@
+Time resolution is 1 ps
+Error:  Attribute Syntax Warning  The attribute  DDR_CLK_EDGE  on /IDDR instance  is set to  SAME_EDGE_PINGPONG.
+ The Legal values for this attribute are  OPPOSITE_EDGE or SAME_EDGE or  SAME_EDGE_PIPELINED.
+Time: 0 ps  Iteration: 0  Process: /gigabit_rx_tb/dut/\gen_rxd_iddr(3)\/iddr_rxd/prcs_init  File: C:/AMDDesignTools/2025.2/Vivado/data/vhdl/src/unisims/primitive/IDDR.vhd
+Error:  Attribute Syntax Warning  The attribute  DDR_CLK_EDGE  on /IDDR instance  is set to  SAME_EDGE_PINGPONG.
+ The Legal values for this attribute are  OPPOSITE_EDGE or SAME_EDGE or  SAME_EDGE_PIPELINED.
+Time: 0 ps  Iteration: 0  Process: /gigabit_rx_tb/dut/\gen_rxd_iddr(2)\/iddr_rxd/prcs_init  File: C:/AMDDesignTools/2025.2/Vivado/data/vhdl/src/unisims/primitive/IDDR.vhd
+Error:  Attribute Syntax Warning  The attribute  DDR_CLK_EDGE  on /IDDR instance  is set to  SAME_EDGE_PINGPONG.
+ The Legal values for this attribute are  OPPOSITE_EDGE or SAME_EDGE or  SAME_EDGE_PIPELINED.
+Time: 0 ps  Iteration: 0  Process: /gigabit_rx_tb/dut/\gen_rxd_iddr(1)\/iddr_rxd/prcs_init  File: C:/AMDDesignTools/2025.2/Vivado/data/vhdl/src/unisims/primitive/IDDR.vhd
+Error:  Attribute Syntax Warning  The attribute  DDR_CLK_EDGE  on /IDDR instance  is set to  SAME_EDGE_PINGPONG.
+ The Legal values for this attribute are  OPPOSITE_EDGE or SAME_EDGE or  SAME_EDGE_PIPELINED.
+Time: 0 ps  Iteration: 0  Process: /gigabit_rx_tb/dut/\gen_rxd_iddr(0)\/iddr_rxd/prcs_init  File: C:/AMDDesignTools/2025.2/Vivado/data/vhdl/src/unisims/primitive/IDDR.vhd
+Error:  Attribute Syntax Warning  The attribute  DDR_CLK_EDGE  on /IDDR instance  is set to  SAME_EDGE_PINGPONG.
+ The Legal values for this attribute are  OPPOSITE_EDGE or SAME_EDGE or  SAME_EDGE_PIPELINED.
+Time: 0 ps  Iteration: 0  Process: /gigabit_rx_tb/dut/iddr_ctrl/prcs_init  File: C:/AMDDesignTools/2025.2/Vivado/data/vhdl/src/unisims/primitive/IDDR.vhd
+$finish called at time : 1108 ns : File "E:/Projects/FPGAs/zynq_z015/bringup/bringup.srcs/sim_1/imports/new/gigabit_rx_tb.sv" Line 64
