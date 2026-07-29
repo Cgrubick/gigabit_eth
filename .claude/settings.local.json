@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m pip install openpyxl --quiet)",
+      "Bash(python -c ' *)",
+      "Bash(python *)"
+    ]
+  }
+}

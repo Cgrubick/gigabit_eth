@@ -18,9 +18,6 @@ entity gigabit_tx is
         RGMII_txc    : out   std_logic;                     -- transmit clock to PHY
         RGMII_tx_ctl : out   std_logic;                     -- TX_EN (rising) / TX_EN xor TX_ER (falling)
 
-        -- MDIO management interface (PHY register access)
-        MDIO_PHY_mdc     : out   std_logic;                 -- management clock (max 25 MHz for RTL8211F)
-        MDIO_PHY_mdio_io : inout std_logic                  -- bidirectional management data
     );
 end entity gigabit_tx;
 

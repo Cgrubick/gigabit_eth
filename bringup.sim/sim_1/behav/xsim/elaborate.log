@@ -5,7 +5,6 @@ Running: C:/AMDDesignTools/2025.2/Vivado/bin/unwrapped/win64.o/xelab.exe --incr 
 Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
-WARNING: [VRFC 10-5021] port 'm_axis_tready' is not connected on this instance [E:/Projects/FPGAs/zynq_z015/bringup/bringup.srcs/sim_1/imports/new/gigabit_rx_tb.sv:25]
 Completed static elaboration
 Starting simulation data flow analysis
 Completed simulation data flow analysis

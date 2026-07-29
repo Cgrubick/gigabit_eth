@@ -1,0 +1,83 @@
+m255
+K4
+z2
+!s11f MIXED_VERSIONS
+!s11e vcom 2024.3 2024.09, Sep 11 2024
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dE:/Projects/FPGAs/zynq_z015/bringup/bringup.srcs/sim_1/imports/new
+Egigabit_rx
+Z1 w1785039627
+Z2 DPx6 unisim 11 vcomponents 0 22 X0YnL;SPGlODN1QJO;@2K2
+Z3 DPx4 ieee 11 numeric_std 0 22 aU^R8eGcicLcUFIaBQSL>3
+Z4 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z5 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 10
+R0
+Z6 8../../../sources_1/new/gigabit_rx.vhd
+Z7 F../../../sources_1/new/gigabit_rx.vhd
+l0
+L8 1
+VfJiMYnBli`eh@oe>VIG^h2
+!s100 fkd6kV>cTKi<TEk2nBYN73
+Z8 OW;C;2024.3;79
+33
+Z9 !s110 1785104077
+!i10b 1
+Z10 !s108 1785104076.000000
+Z11 !s90 -reportprogress|300|-2008|-quiet|-work|work|../../../sources_1/new/gigabit_rx.vhd|
+Z12 !s107 ../../../sources_1/new/gigabit_rx.vhd|
+!i113 1
+Z13 o-quiet -2008 -work work -O0
+Z14 tExplicit 1 CvgOpt 0
+Artl
+R2
+R3
+R4
+R5
+DEx4 work 10 gigabit_rx 0 22 fJiMYnBli`eh@oe>VIG^h2
+!i122 10
+l54
+L25 169
+VLXMR@^CmF0^;P:3<X5oJT3
+!s100 BQzSWE<2e3_Jf>=n9G:_]1
+R8
+33
+R9
+!i10b 1
+R10
+R11
+R12
+!i113 1
+R13
+R14
+vgigabit_rx_tb
+2gigabit_rx_tb.sv
+DXx6 sv_std 3 std 0 22 VYECXdT12H8WgbUP_5Y6:3
+R9
+!i10b 1
+!s100 Nn<MalnT85KPR72PiP_AV1
+IHkEa[PN9MLU6KhXz>1glG3
+S1
+R0
+w1785103978
+8gigabit_rx_tb.sv
+Fgigabit_rx_tb.sv
+!i122 11
+L0 3 103
+VDg1SIo80bB@j0V0VzS_@n1
+OW;L;2024.3;79
+r1
+!s85 0
+31
+!s108 1785104077.000000
+!s107 gigabit_rx_tb.sv|
+!s90 -reportprogress|300|-sv|+acc|-quiet|-work|work|gigabit_rx_tb.sv|
+!s101 -O0
+!i113 1
+o-quiet -sv +acc -work work -O0
+tCvgOpt 0

@@ -24,7 +24,9 @@ end entity gigabit_rx;
 
 architecture rtl of gigabit_rx is
 
-
+   constant FPGA_MAC : std_logic_vector(47 downto 0)  := x"010203040506";
+   constant IPV4     : std_logic_vector(15 downto 0)  := x"0800";
+   constant ARP      : std_logic_vector(15 downto 0)  := x"0806";
 
     type eth_states is (IDLE_S, PREAMBLE_SFD_S, ETH_HEADER_S, PAYLOAD_S, FCS_S);
     signal eth_state      	: eth_states;
@@ -35,14 +37,29 @@ architecture rtl of gigabit_rx is
     signal ctrl_f           : std_logic;
     -- Assembled iddr discretes
     signal eth_byte         : std_logic_vector(7 downto 0);
-    signal ctrl_dv          : std_logic;    
+    signal ctrl_dv          : std_logic;
+    signal ctrl_dv_prev     : std_logic;  
+    signal ctrl_dv_rise     : std_logic;  
     signal rx_err           : std_logic;
     
-    signal byte_counter     : unsigned(7 downto 0);
+    signal byte_count       : unsigned(7 downto 0);
 
     signal dest_mac         : std_logic_vector(47 downto 0); -- Who the frame is for (local link). MAC filtering.
-    signal src_mac         : std_logic_vector(47 downto 0);
-    signal ethertype         : std_logic_vector(15 downto 0); -- 0x0800 = IPv4, 0x0806 = ARP.
+    signal src_mac          : std_logic_vector(47 downto 0);
+    signal ethertype        : std_logic_vector(15 downto 0); -- 0x0800 = IPv4, 0x0806 = ARP.
+    signal packet_dropped   : std_logic;
+    signal is_arp           : std_logic;
+    signal is_ipv4          : std_logic;
+
+    type pipeline_t is array(0 to 3) of std_logic_vector(7 downto 0);
+    signal payload_pipeline : pipeline_t;
+    signal pipe_count       : unsigned(2 downto 0); 
+    alias pipeline_full     : std_logic is pipe_count(2);
+    signal pipeline_valid   : std_logic;
+    signal payload_data     : std_logic_vector(7 downto 0);
+
+    signal fcs_payload      : std_logic_vector(31 downto 0);
+
 begin
 
 
@@ -54,7 +71,7 @@ begin
     gen_rxd_iddr : for i in 0 to 3 generate
         iddr_rxd : IDDR
             generic map (
-                DDR_CLK_EDGE => "SAME_EDGE_PINGPONG",
+                DDR_CLK_EDGE => "SAME_EDGE_PIPELINED",
                 INIT_Q1      => '0',
                 INIT_Q2      => '0',
                 SRTYPE       => "ASYNC"
@@ -73,7 +90,7 @@ begin
     -- IDDR for the RGMII control line
     iddr_ctrl : IDDR
         generic map (
-            DDR_CLK_EDGE => "SAME_EDGE_PINGPONG",
+            DDR_CLK_EDGE => "SAME_EDGE_PIPELINED",
             INIT_Q1      => '0',
             INIT_Q2      => '0',
             SRTYPE       => "ASYNC"
@@ -91,10 +108,12 @@ begin
     byte_counter : process (RGMII_rx_clk, reset_n)
     begin
         if reset_n = '0' then
-            byte_counter    <= (others => '0');
+            byte_count    <= (others => '0');
         elsif rising_edge(RGMII_rx_clk) then
             if(eth_state = ETH_HEADER_S) then 
-                byte_counter <= byte_counter + 1;
+                byte_count <= byte_count + 1;
+            else
+                byte_count <= (others => '0');
             end if;
         end if;
     end process;
@@ -107,48 +126,88 @@ begin
     eth_parser : process (RGMII_rx_clk, reset_n)
     begin
         if reset_n = '0' then
-            eth_state       <= IDLE_S;
+            eth_state      <= IDLE_S;
+            packet_dropped <= '0';
+            is_arp         <= '0';
+            is_ipv4        <= '0';
         elsif rising_edge(RGMII_rx_clk) then
             case eth_state is
                 when IDLE_S =>
-                    if(ctrl_dv = '1') then -- DV stays valid during entire ethernet frame
+                    packet_dropped  <= '0';
+                    is_ipv4         <= '0';
+                    is_arp          <= '0';
+                    ctrl_dv_prev    <= ctrl_dv;
+                    ctrl_dv_rise    <= ctrl_dv and not ctrl_dv_prev; -- to prevent the FSM from going back into preamble if packet is dropped mid packet
+                    if(ctrl_dv_rise = '1') then -- DV stays valid during entire ethernet frame
                         eth_state <= PREAMBLE_SFD_S;        
                     end if;
                 when PREAMBLE_SFD_S => 
                     if(ctrl_dv = '0') then
                         eth_state   <= IDLE_S;
-                    elsif(eth_byte = x"5D") then 
+                    elsif(eth_byte = x"D5") then
                         eth_state <= ETH_HEADER_S;
                     end if;
                 when ETH_HEADER_S => -- parses out dest MAC, src MAC, ethertype 
                     if(ctrl_dv = '0') then
                         eth_state   <= IDLE_S;
-                    elsif(byte_counter = 14) then
-                        if(dest_mac /= FPGA_MAC or (ethertype /= IPV4 or ethertype /= ARP)) then
-                            eth_state   <= IDLE_S;
+                    elsif(byte_count = 14) then
+                        if ((ethertype /= IPV4 or dest_mac /= FPGA_MAC) and (ethertype /= ARP)) then
+                            eth_state        <= IDLE_S;
+                            packet_dropped   <= '1';
                         else
+                            if(ethertype = IPV4) then
+                                is_ipv4 <= '1';
+                                is_arp  <= '0';
+                            elsif(ethertype = ARP) then
+                                is_ipv4 <= '0';
+                                is_arp  <= '1';
+                            end if;
                             eth_state   <= PAYLOAD_S;
                         end if;
                     end if;
-                when PAYLOAD_S => -- parses out dest MAC, src MAC, ethertype 
-                    if(ctrl_dv = '0') then
-                        eth_state   <= IDLE_S;
-                    elsif(byte_counter = 14) then
-                        eth_state   <= IDLE_S;
+                when PAYLOAD_S => -- parses out dest MAC, src MAC, ethertype, FCS - 4 BYTE, must strip and check it before moving onto passing IP packet over AXI stream
+                    if(ctrl_dv = '1') then
+                        payload_pipeline(0) <= eth_byte;          -- 4-byte delay line
+                        payload_pipeline(1) <= payload_pipeline(0);
+                        payload_pipeline(2) <= payload_pipeline(1);
+                        payload_pipeline(3) <= payload_pipeline(2);
+                        if(pipeline_full = '0') then
+                            pipe_count      <= pipe_count + 1;
+                            pipeline_valid  <= '0';
+                        else
+                            payload_data    <= payload_pipeline(3);
+                            pipeline_valid  <= '1';
+                        end if;
+                    else -- end of frame, collect fcs and return to idle state
+                        fcs_payload     <= payload_pipeline(3) & payload_pipeline(2) & payload_pipeline(1) & payload_pipeline(0);
+                        pipeline_valid  <= '0';
+                        pipe_count      <= (others => '0');
+                        eth_state       <= IDLE_S;
                     end if;
-                when FCS_S => -- parses out dest MAC, src MAC, ethertype 
-                    if(ctrl_dv = '0') then
-                        eth_state   <= IDLE_S;
-                    elsif(byte_counter = 14) then
-                        eth_state   <= IDLE_S;
-                    end if;
+                    
                 when others =>
             end case;
         end if;
     end process;
-    dest_mac    <= header_buffer(0 downto 0); 
-    src_mac     <= header_buffer(0 downto 0);
-    ethertype   <= header_buffer(0 downto 0); 
+
+    byte_shift : process (RGMII_rx_clk, reset_n)
+    begin
+        if reset_n = '0' then
+            dest_mac    <= (others => '0');
+            src_mac     <= (others => '0');
+            ethertype   <= (others => '0'); 
+        elsif rising_edge(RGMII_rx_clk) then
+            if(eth_state = ETH_HEADER_S and byte_count < 6 and byte_count >= 0) then
+                dest_mac <= dest_mac(39 downto 0) & eth_byte;
+            elsif(eth_state = ETH_HEADER_S and byte_count < 12 and byte_count >= 6) then
+                src_mac <= src_mac(39 downto 0) & eth_byte;
+            elsif(eth_state = ETH_HEADER_S and byte_count < 14 and byte_count >= 12) then
+                ethertype <= ethertype(7 downto 0) & eth_byte;
+            elsif(eth_state = Idle_S and byte_count >= 14) then
+             
+            end if;
+        end if;
+    end process;
 
 
 
@@ -156,6 +215,7 @@ begin
     m_axis_tvalid   <= '0';
     m_axis_tlast    <= '0';
     rx_error        <= '0';
+
 end rtl;
 
-
+ 

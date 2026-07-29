@@ -1,0 +1,74 @@
+m255
+K4
+z2
+!s11e vcom 2024.3 2024.09, Sep 11 2024
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dE:/Projects/FPGAs/zynq_z015/bringup/bringup.srcs/sim_1/imports/new
+Eiddr
+Z1 w1785039877
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 8
+R0
+Z4 8iddr_model.vhd
+Z5 Fiddr_model.vhd
+l0
+L27 1
+VzFjdzYI[<[G;HZCDbnkV60
+!s100 5_=8a4dB0?<>RJAf`AJ7R3
+Z6 OW;C;2024.3;79
+33
+Z7 !s110 1785104076
+!i10b 1
+Z8 !s108 1785104076.000000
+Z9 !s90 -reportprogress|300|-2008|-quiet|-work|unisim|iddr_model.vhd|
+Z10 !s107 iddr_model.vhd|
+!i113 1
+Z11 o-quiet -2008 -work unisim -O0
+Z12 tExplicit 1 CvgOpt 0
+Abehavioral
+R2
+R3
+Z13 DEx4 work 4 iddr 0 22 zFjdzYI[<[G;HZCDbnkV60
+!i122 8
+l53
+Z14 L48 36
+Z15 V3VS:@=9_adAQM<7_moB8o2
+Z16 !s100 h0^mKPCHIzz?;m^LH^c7D0
+R6
+33
+R7
+!i10b 1
+R8
+R9
+R10
+!i113 1
+R11
+R12
+Pvcomponents
+R2
+R3
+!i122 8
+R1
+R0
+R4
+R5
+l0
+L4 19
+VX0YnL;SPGlODN1QJO;@2K2
+!s100 edofT1C]D>cn@i5KcnA;K2
+R6
+33
+R7
+!i10b 1
+R8
+R9
+R10
+!i113 1
+R11
+R12
