@@ -131,6 +131,11 @@ begin
             is_arp         <= '0';
             is_ipv4        <= '0';
         elsif rising_edge(RGMII_rx_clk) then
+            -- axi driver logic
+            m_axis_tdata    <= payload_data;
+            m_axis_tvalid   <= pipeline_valid;
+            m_axis_tlast    <= '0';
+            
             case eth_state is
                 when IDLE_S =>
                     packet_dropped  <= '0';
@@ -179,7 +184,11 @@ begin
                             pipeline_valid  <= '1';
                         end if;
                     else -- end of frame, collect fcs and return to idle state
-                        fcs_payload     <= payload_pipeline(3) & payload_pipeline(2) & payload_pipeline(1) & payload_pipeline(0);
+                        fcs_payload     <= payload_pipeline(3) & payload_pipeline(2) & payload_pipeline(1) & payload_pipeline(0); 
+                        -- !!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        -- TODO CHECK FCS and raise flag for FCS error so downstream module knows to drop packet
+                        -- !!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        m_axis_tlast    <= pipeline_valid;
                         pipeline_valid  <= '0';
                         pipe_count      <= (others => '0');
                         eth_state       <= IDLE_S;
@@ -204,17 +213,11 @@ begin
             elsif(eth_state = ETH_HEADER_S and byte_count < 14 and byte_count >= 12) then
                 ethertype <= ethertype(7 downto 0) & eth_byte;
             elsif(eth_state = Idle_S and byte_count >= 14) then
-             
             end if;
         end if;
     end process;
 
-
-
-    m_axis_tdata    <= (others => '0');
-    m_axis_tvalid   <= '0';
-    m_axis_tlast    <= '0';
-    rx_error        <= '0';
+    rx_error        <= packet_dropped;
 
 end rtl;
 

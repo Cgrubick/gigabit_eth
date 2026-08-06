@@ -1,0 +1,8 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1785381301" />
+    <testcase name="smoke_test" classname="gigabit_rx_tb" file="/mnt/e/Projects/FPGAs/zynq_z015/bringup/cocotb_sims/gigabit_rx_tb/gigabit_rx_tb.py" lineno="6" time="0.002812623977661133" sim_time_ns="24.0" ratio_time="8532.95719250657">
+      <failure error_type="TypeError" error_msg="send_frame() missing 1 required positional argument: 'frame'" />
+    </testcase>
+  </testsuite>
+</testsuites>

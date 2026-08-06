@@ -1,6 +1,10 @@
 #set UnusedPin
 set_property BITSTREAM.CONFIG.UNUSEDPIN Pullnone [current_design]
 
+set_property PACKAGE_PIN L5 [get_ports clk_50M]
+set_property IOSTANDARD LVCMOS33 [get_ports clk_50M]
+create_clock -period 20.000 -name clk_50M [get_ports clk_50M]
+
 create_clock -period 13.888 -name Cam_PCLK [get_ports Cam_PCLK]
 set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets Cam_PCLK_IBUF]
 
@@ -141,6 +145,11 @@ set_property PACKAGE_PIN Y15 [get_ports RGMII_rx_ctrl]
 set_property PACKAGE_PIN U17 [get_ports RGMII_tx_ctl]
 set_property PACKAGE_PIN U11 [get_ports MDIO_PHY_mdc]
 set_property PACKAGE_PIN U12 [get_ports MDIO_PHY_mdio_io]
+
+## FPGA RGB LEDs (bank 34) - [0]=BLUE(D0, B34_L24_P), [1]=GREEN(D1, B34_L24_N)
+set_property PACKAGE_PIN P7 [get_ports {FPGA_LED[0]}]
+set_property PACKAGE_PIN R7 [get_ports {FPGA_LED[1]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {FPGA_LED[*]}]
 
 ## IIC1
 set_property IOSTANDARD LVCMOS33 [get_ports IIC1_scl_io]
@@ -319,8 +328,6 @@ set_property PACKAGE_PIN M8 [get_ports {tmds_data_0_v_p[1]}]
 set_property PACKAGE_PIN N6 [get_ports {tmds_data_0_v_p[0]}]
 set_property PACKAGE_PIN T2 [get_ports tmds_clk_0_clk_p]
 
-set_property PACKAGE_PIN L5 [get_ports clk_in50M]
-set_property IOSTANDARD LVCMOS33 [get_ports clk_in50M]
 
 set_property IOSTANDARD LVCMOS33 [get_ports {GPIO_0_0_tri_io[4]}]
 set_property PACKAGE_PIN R7 [get_ports {GPIO_0_0_tri_io[4]}]

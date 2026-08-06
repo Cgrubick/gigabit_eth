@@ -1,0 +1,5 @@
+v 4
+file "/mnt/e/Projects/FPGAs/zynq_z015/bringup/cocotb_sims/gigabit_rx_tb/" "../../bringup.srcs/sim_1/imports/new/iddr_model.vhd" "3e06774f805ca4b8575bc333b68d66ff535b6af0" "20260730031500.945":
+  package vcomponents at 1( 0) + 0 on 11;
+  entity iddr at 24( 610) + 0 on 12;
+  architecture behavioral of iddr at 48( 1333) + 0 on 13;

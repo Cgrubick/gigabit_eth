@@ -1,0 +1,4 @@
+v 4
+file "/mnt/e/Projects/FPGAs/zynq_z015/bringup/cocotb_sims/gigabit_rx_tb/" "../../bringup.srcs/sources_1/new/gigabit_rx.vhd" "1a919b3091339642d7a7d49cce32b39da7721d9f" "20260730031500.945":
+  entity gigabit_rx at 1( 0) + 0 on 11;
+  architecture rtl of gigabit_rx at 25( 1055) + 0 on 12;
